@@ -44,7 +44,7 @@ export default defineComponent({
     LoginPhone
   },
   setup() {
-    const isKeepPassword = ref(false)
+    const isKeepPassword = ref(true)
     const accountRef = ref<InstanceType<typeof LoginAccount>>()
     const currentTab = ref('account')
 
