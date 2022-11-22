@@ -4,12 +4,18 @@
       <Expand v-if="isFold" />
       <Fold v-else />
     </el-icon>
+    <div class="content">
+      面包屑
+      <user-info />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import UserInfo from './user-info.vue'
 export default defineComponent({
+  components: { UserInfo },
   emits: ['foldChange'],
   setup(props, { emit }) {
     const isFold = ref(false)
