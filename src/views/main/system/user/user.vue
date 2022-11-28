@@ -5,11 +5,18 @@
 
       <div class="content">
         <hz-table
+          :title="title"
           :listData="userList"
           :propList="propList"
           :show-index-column="showIndexColumn"
           :show-select-column="showSelectColumn"
         >
+          <!-- <template #header>哈哈哈</template> -->
+          <template #headerHandler>
+            <el-button type="primary">新建用户</el-button>
+          </template>
+
+          <!-- 列的插槽 -->
           <template #status="scope">
             <el-button
               size="small"
@@ -65,6 +72,8 @@ export default defineComponent({
     const userList = computed(() => store.state.system.userList)
     // const userCount = computed(() => store.state.system.userCount)
 
+    const title = '用户列表'
+
     const propList = [
       { prop: 'name', label: '用户名', minWidth: '100' },
       { prop: 'realname', label: '真实姓名', minWidth: '100' },
@@ -94,6 +103,7 @@ export default defineComponent({
     return {
       searchFormConfig,
       userList,
+      title,
       propList,
       showIndexColumn,
       showSelectColumn
