@@ -1,120 +1,29 @@
 <template>
   <div class="user">
-    <div class="search">
-      <page-search :searchFormConfig="searchFormConfig" />
-
-      <div class="content">
-        <hz-table
-          :title="title"
-          :listData="userList"
-          :propList="propList"
-          :show-index-column="showIndexColumn"
-          :show-select-column="showSelectColumn"
-        >
-          <!-- <template #header>哈哈哈</template> -->
-          <template #headerHandler>
-            <el-button type="primary">新建用户</el-button>
-          </template>
-
-          <!-- 列的插槽 -->
-          <template #status="scope">
-            <el-button
-              size="small"
-              :type="scope.row.enable ? 'success' : 'danger'"
-              plain
-            >
-              {{ scope.row.enable ? '启用' : '禁用' }}
-            </el-button>
-          </template>
-          <template #createAt="scope">
-            <span>{{ $filters.formatTime(scope.row.createAt) }}</span>
-          </template>
-          <template #updateAt="scope">
-            <span>{{ $filters.formatTime(scope.row.updateAt) }}</span>
-          </template>
-          <template #handler>
-            <div class="handle-btns">
-              <el-link type="primary">
-                <el-icon><Edit /></el-icon>编辑
-              </el-link>
-              <el-link type="primary">
-                <el-icon><Delete /></el-icon>删除
-              </el-link>
-            </div>
-          </template>
-        </hz-table>
-      </div>
-    </div>
+    <page-search :searchFormConfig="searchFormConfig" />
+    <page-content :contentTableConfig="contentTableConfig" pageName="user" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import { useStore } from '@/store'
+import { defineComponent } from 'vue'
+
+import PageSearch from '@/components/page-search'
+import PageContent from '@/components/page-content'
 
 import { searchFormConfig } from './config/search.config'
-import PageSearch from '@/components/page-search'
-import HzTable from '@/base-ui/table'
+import { contentTableConfig } from './config/content.config'
 
 export default defineComponent({
   name: 'user',
-  components: { PageSearch, HzTable },
+  components: { PageSearch, PageContent },
   setup() {
-    const store = useStore()
-    store.dispatch('system/getPageListAction', {
-      pageUrl: '/users/list',
-      queryInfo: {
-        offset: 0,
-        size: 10
-      }
-    })
-
-    const userList = computed(() => store.state.system.userList)
-    // const userCount = computed(() => store.state.system.userCount)
-
-    const title = '用户列表'
-
-    const propList = [
-      { prop: 'name', label: '用户名', minWidth: '100' },
-      { prop: 'realname', label: '真实姓名', minWidth: '100' },
-      { prop: 'cellphone', label: '手机号码', minWidth: '120' },
-      { prop: 'enable', label: '状态', minWidth: '100', slotName: 'status' },
-      {
-        prop: 'createAt',
-        label: '创建时间',
-        minWidth: '250',
-        slotName: 'createAt'
-      },
-      {
-        prop: 'updateAt',
-        label: '更新时间',
-        minWidth: '250',
-        slotName: 'updateAt'
-      },
-      {
-        label: '操作',
-        minWidth: '120',
-        slotName: 'handler'
-      }
-    ]
-    const showIndexColumn = true
-    const showSelectColumn = true
-
     return {
       searchFormConfig,
-      userList,
-      title,
-      propList,
-      showIndexColumn,
-      showSelectColumn
+      contentTableConfig
     }
   }
 })
 </script>
 
-<style scoped>
-.content {
-  padding: 20px;
-  border-top: 20px solid #f5f5f5;
-}
-</style>
+<style scoped></style>
