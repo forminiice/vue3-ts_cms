@@ -38,16 +38,11 @@ const systemModule: Module<ISystemState, IRootState> = {
   },
   actions: {
     async getPageListAction({ commit }, payload: any) {
+      // 1.获取pageUrl
       const pageName = payload.pageName
-      // const pageUrl = `${pageName}/list`
-      let pageUrl = ''
-      switch (pageName) {
-        case 'user':
-          pageUrl = '/users/list'
-          break
-        case 'role':
-          pageUrl = '/role/list'
-      }
+      const pageUrlName =
+        payload.pageName === 'user' ? 'users' : payload.pageName
+      const pageUrl = `/${pageUrlName}/list`
 
       // 对页面发送请求
       const pageResult = await getPageListData(pageUrl, payload.queryInfo)
