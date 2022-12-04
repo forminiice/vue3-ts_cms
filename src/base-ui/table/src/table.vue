@@ -35,14 +35,11 @@
     <div class="footer">
       <slot name="footer">
         <el-pagination
-          v-model:current-page="currentPage4"
-          v-model:page-size="pageSize4"
-          :page-sizes="[100, 200, 300, 400]"
-          :small="small"
-          :disabled="disabled"
-          :background="background"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="400"
+          :current-page="page.currentPage"
+          :page-size="page.pageSize"
+          :page-sizes="[10, 20, 30]"
+          :total="listCount"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
         />
@@ -56,9 +53,17 @@ import { defineComponent, PropType } from 'vue'
 
 export default defineComponent({
   props: {
+    title: {
+      type: String,
+      default: ''
+    },
     listData: {
       type: Array,
       required: true
+    },
+    listCount: {
+      type: Number,
+      default: 0
     },
     propList: {
       type: Array as PropType<any[]>,
@@ -72,13 +77,24 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    title: {
-      type: String,
-      default: ''
+    page: {
+      type: Object,
+      default: () => ({ currentPage: 0, pageSize: 10, listCount: 0 })
     }
   },
-  setup() {
-    return {}
+  emits: ['update:page'],
+  setup(props, { emit }) {
+    const handleCurrentChange = (currentPage: number) => {
+      emit('update:page', { ...props.page, currentPage })
+    }
+    const handleSizeChange = (pageSize: number) => {
+      emit('update:page', { ...props.page, pageSize })
+    }
+    return {
+      // pageInfo,
+      handleCurrentChange,
+      handleSizeChange
+    }
   }
 })
 </script>

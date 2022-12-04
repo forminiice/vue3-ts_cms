@@ -5,6 +5,9 @@ export const searchFormConfig: IForm = {
   itemStyle: {
     padding: '10px 40px'
   },
+  colLayout: {
+    span: 8
+  },
   formItems: [
     {
       field: 'id',
@@ -41,7 +44,7 @@ export const searchFormConfig: IForm = {
       ]
     },
     {
-      field: 'creatAt',
+      field: 'createAt',
       type: 'datepicker',
       label: '创建时间',
       otherOptions: {

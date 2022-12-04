@@ -12,7 +12,8 @@
                 v-if="item.type === 'input' || item.type === 'password'"
               >
                 <el-input
-                  v-model="formData[item.field]"
+                  :model-value="modelValue[item.field]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                   :placeholder="item.placeholder"
                   v-bind="item.otherOptions"
                   :show-password="item.type === 'password'"
@@ -20,7 +21,8 @@
               </template>
               <template v-else-if="item.type === 'select'">
                 <el-select
-                  v-model="formData[item.field]"
+                  :model-value="modelValue[item.field]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                   :placeholder="item.placeholder"
                   v-bind="item.otherOptions"
                   style="width: 100%"
@@ -35,7 +37,8 @@
               </template>
               <template v-else-if="item.type === 'datepicker'">
                 <el-date-picker
-                  v-model="formData[item.field]"
+                  :model-value="modelValue[item.field]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                   style="width: 100%"
                   v-bind="item.otherOptions"
                 ></el-date-picker>
@@ -52,7 +55,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, watch } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { IFormItem } from '../types/index'
 
 export default defineComponent({
@@ -86,16 +89,11 @@ export default defineComponent({
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
-    const formData = ref({ ...props.modelValue })
-    watch(
-      formData,
-      (newValue) => {
-        emit('update:modelValue', newValue)
-      },
-      { deep: true }
-    )
+    const handleValueChange = (value: any, field: string) => {
+      emit('update:modelValue', { ...props.modelValue, [field]: value })
+    }
     return {
-      formData
+      handleValueChange
     }
   }
 })

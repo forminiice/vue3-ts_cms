@@ -32,7 +32,7 @@ const systemModule: Module<ISystemState, IRootState> = {
     pageListData(state) {
       return (pageName: PageName) => state[`${pageName}List`]
     },
-    pageCounttData(state) {
+    pageListCount(state) {
       return (pageName: PageName) => state[`${pageName}Count`]
     }
   },

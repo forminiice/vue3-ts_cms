@@ -6,8 +6,10 @@
       </template>
       <template #footer>
         <div class="handle-btns">
-          <el-button icon="Refresh">重置</el-button>
-          <el-button type="primary" icon="Search">搜索</el-button>
+          <el-button icon="Refresh" @click="handleResetClick">重置</el-button>
+          <el-button type="primary" icon="Search" @click="handleQueryClick">
+            搜索
+          </el-button>
         </div>
       </template>
     </hz-form>
@@ -19,6 +21,7 @@ import { defineComponent, ref } from 'vue'
 import HzForm from '@/base-ui/form'
 
 export default defineComponent({
+  emits: ['resetBtnClick', 'queryBtnClick'],
   props: {
     searchFormConfig: {
       type: Object,
@@ -26,15 +29,28 @@ export default defineComponent({
     }
   },
   components: { HzForm },
-  setup() {
-    const formData = ref({
-      id: '',
-      name: '',
-      password: '',
-      sport: '',
-      createTime: ''
-    })
-    return { formData }
+  setup(props, { emit }) {
+    // 双向绑定的属性应该是由配置文件的field来决定
+    // formData中的属性应该动态来决定
+    const formItems = props.searchFormConfig.formItems ?? []
+    const formOriginData: any = {}
+    for (const item of formItems) {
+      formOriginData[item.field] = ''
+    }
+    const formData = ref(formOriginData)
+
+    // 2. 当用户点击重置
+    const handleResetClick = () => {
+      formData.value = formOriginData
+      emit('resetBtnClick')
+    }
+
+    // 3. 当用户点击搜索
+    const handleQueryClick = () => {
+      emit('queryBtnClick', formData.value)
+    }
+
+    return { formData, handleResetClick, handleQueryClick }
   }
 })
 </script>
