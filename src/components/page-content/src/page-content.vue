@@ -37,6 +37,15 @@
           </el-link>
         </div>
       </template>
+      <template
+        v-for="item in otherPropSlots"
+        :key="item.prop"
+        #[item.slotName]="scope"
+      >
+        <template v-if="item.slotName">
+          <slot :name="item.slotName" :row="scope.row"></slot>
+        </template>
+      </template>
     </hz-table>
   </div>
 </template>
@@ -90,10 +99,23 @@ export default defineComponent({
       store.getters[`system/pageListCount`](props.pageName)
     )
 
+    // 获取其他动态 插槽名称
+    const otherPropSlots = props.contentTableConfig?.propList.filter(
+      (item: any) => {
+        if (
+          ['status', 'createAt', 'updateAt', 'handler'].includes(item.slotName)
+        ) {
+          return false
+        }
+        return true
+      }
+    )
+
     return {
       dataList,
       dataCount,
       pageInfo,
+      otherPropSlots,
       getPageData
     }
   }
