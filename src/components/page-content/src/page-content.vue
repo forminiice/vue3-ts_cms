@@ -8,7 +8,7 @@
     >
       <!-- <template #header>哈哈哈</template> -->
       <template #headerHandler>
-        <el-button type="primary">新建用户</el-button>
+        <el-button v-if="isCreate" type="primary">新建用户</el-button>
       </template>
 
       <!-- 列的插槽 -->
@@ -29,10 +29,10 @@
       </template>
       <template #handler>
         <div class="handle-btns">
-          <el-link type="primary">
+          <el-link v-if="isUpdate" type="primary">
             <el-icon><Edit /></el-icon>编辑
           </el-link>
-          <el-link type="primary">
+          <el-link v-if="isDelete" type="primary">
             <el-icon><Delete /></el-icon>删除
           </el-link>
         </div>
@@ -53,6 +53,7 @@
 <script lang="ts">
 import { defineComponent, computed, PropType, ref, watch } from 'vue'
 import { useStore } from '@/store'
+import { usePermission } from '@/hooks/use-permission'
 
 import HzTable from '@/base-ui/table'
 
@@ -71,6 +72,12 @@ export default defineComponent({
   setup(props) {
     const store = useStore()
 
+    // 获取权限
+    const isCreate = usePermission(props.pageName, 'create')
+    const isUpdate = usePermission(props.pageName, 'update')
+    const isDelete = usePermission(props.pageName, 'delete')
+    const isQuery = usePermission(props.pageName, 'query')
+
     // pageInfo双向绑定
     const pageInfo = ref({ currentPage: 1, pageSize: 10 })
     watch(pageInfo, () => {
@@ -80,6 +87,7 @@ export default defineComponent({
 
     // 获取页面数据
     const getPageData = (queryInfo: any = {}) => {
+      if (!isQuery) return
       store.dispatch('system/getPageListAction', {
         pageName: props.pageName,
         queryInfo: {
@@ -116,6 +124,10 @@ export default defineComponent({
       dataCount,
       pageInfo,
       otherPropSlots,
+      isCreate,
+      isUpdate,
+      isDelete,
+      isQuery,
       getPageData
     }
   }
